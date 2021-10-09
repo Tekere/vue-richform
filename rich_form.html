@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+		/>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+		<link rel="stylesheet" href="style.css" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="app">
+			<form action="" ref="form">
+				<div class="field">
+					<label class="label" for="name"
+						><span class="tag is-danger">必須</span
+						><span style="margin-left: 0.4em">お名前</span></label
+					>
+					<div class="control">
+						<input
+							v-model="name.value"
+							@change="validateName"
+							class="input"
+							:class="{'is-danger':name.isError,'is-success':name.isSuccess}"
+							type="text"
+							placeholder="山田太郎"
+							id="name"
+						/>
+					</div>
+					<p v-if="name.isError" class="help is-danger" v-cloak>
+						{{name.errorMessage}}
+					</p>
+				</div>
+				<div class="field">
+					<label class="label" for="nameFurigana"
+						><span class="tag is-danger">必須</span
+						><span style="margin-left: 0.4em">お名前（ふりがな）</span></label
+					>
+					<div class="control">
+						<input
+							v-model="nameFurigana.value"
+							@change="validateNameFurigana"
+							class="input"
+							:class="{'is-danger':nameFurigana.isError,'is-success':nameFurigana.isSuccess}"
+							type="text"
+							placeholder="やまだたろう"
+							id="nameFurigana"
+						/>
+					</div>
+					<p v-if="nameFurigana.isError" class="help is-danger" v-cloak>
+						{{nameFurigana.errorMessage}}
+					</p>
+				</div>
+				<div class="field">
+					<label class="label" for="email"
+						><span class="tag is-danger">必須</span
+						><span style="margin-left: 0.4em">メールアドレス</span></label
+					>
+					<div class="control">
+						<input
+							v-model="email.value"
+							@change="validateEmail"
+							class="input"
+							:class="{'is-danger':email.isError,'is-success':email.isSuccess}"
+							type="mail"
+							placeholder="test@test.com"
+							id="email"
+						/>
+					</div>
+					<p v-if="email.isError" class="help is-danger" v-cloak>
+						{{email.errorMessage}}
+					</p>
+				</div>
+				<div class="field">
+					<label class="label" for="tel"
+						><span class="tag is-light">任意</span
+						><span style="margin-left: 0.4em">電話番号</span></label
+					>
+					<div class="control">
+						<input
+							v-model="tel.value"
+							class="input"
+							:class="{'is-danger':tel.isError,'is-success':tel.isSuccess}"
+							type="tel"
+							placeholder="090-0000-0000"
+							id="tel"
+						/>
+					</div>
+					<p v-if="tel.isError" class="help is-danger" v-cloak>
+						{{tel.errorMessage}}
+					</p>
+				</div>
+				<div class="field">
+					<label class="label" for="companyName"
+						><span class="tag is-light">任意</span
+						><span style="margin-left: 0.4em">会社名／団体名</span></label
+					>
+					<div class="control">
+						<input
+							class="input"
+							type="tel"
+							placeholder="◯◯株式会社"
+							id="companyName"
+						/>
+					</div>
+				</div>
+				<div class="field">
+					<label class="label" for="contentType"
+						><span class="tag is-danger">必須</span
+						><span style="margin-left: 0.4em">お問い合わせ項目</span></label
+					>
+					<div class="control">
+						<div
+							class="select"
+							:class="{'is-danger':contentType.isError,'is-success':contentType.isSuccess}"
+						>
+							<select
+								v-model="contentType.value"
+								@change="validateContentType"
+								id="contentType"
+							>
+								<option value="">選択してください</option>
+								<option value="1">○について</option>
+								<option value="2">▲について</option>
+								<option value="3">☓について</option>
+							</select>
+						</div>
+					</div>
+					<p v-if="contentType.isError" class="help is-danger" v-cloak>
+						{{contentType.errorMessage}}
+					</p>
+				</div>
+				<div class="field">
+					<label class="label" for="content"
+						><span class="tag is-danger">必須</span
+						><span style="margin-left: 0.4em">お問い合わせ内容</span></label
+					>
+					<div class="control">
+						<textarea
+							v-model="content.value"
+							@change="validateContent"
+							class="textarea"
+							:class="{'is-danger':content.isError,'is-success':content.isSuccess}"
+							id="content"
+						></textarea>
+					</div>
+					<p v-if="content.isError" class="help is-danger" v-cloak>
+						{{content.errorMessage}}
+					</p>
+				</div>
+				<div class="field">
+					<div class="control">
+						<label class="checkbox">
+							<input
+								v-model="privacy.value"
+								@change="validatePrivacy"
+								type="checkbox"
+								:class="{'is-danger':privacy.isError,'is-success':privacy.isSuccess}"
+							/>
+							<a href="">プライバシーポリシー</a
+							>の内容に同意の上、確認画面へお進みください。
+						</label>
+					</div>
+					<p v-if="privacy.isError" class="help is-danger" v-cloak>
+						{{ privacy.errorMessage }}
+					</p>
+				</div>
+				<div class="field">
+					<div class="control">
+						<button @click="submitValidation" class="button is-link">
+							確認画面へ
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<script>
+			new Vue({
+				el: '#app',
+				data: {
+					name: {
+						value: '',
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					},
+					nameFurigana: {
+						value: '',
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					},
+					email: {
+						value: '',
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					},
+					tel: {
+						value: '',
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					},
+					contentType: {
+						value: '',
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					},
+					content: {
+						value: '',
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					},
+					privacy: {
+						value: false, //checkbox
+						isError: false,
+						isSuccess: false,
+						errorMessage: ''
+					}
+				},
+				computed: {
+					allValidations: function () {
+						if (
+							!this.name.isError &&
+							!this.nameFurigana.isError &&
+							!this.email.isError &&
+							!this.contentType.isError &&
+							!this.content.isError &&
+							!this.privacy.isError
+						) {
+							return true
+						}
+						return false
+					}
+				},
+				methods: {
+					// お名前バリデーション
+					validateName() {
+						const target = this.name
+						if (target.value === '') {
+							target.errorMessage = '必須項目です'
+						} else {
+							target.isError = false
+							target.isSuccess = true
+							return
+						}
+						target.isError = true
+					},
+
+					// お名前（ふりがな）バリデーション
+					validateNameFurigana() {
+						const target = this.nameFurigana
+						if (target.value === '') {
+							target.errorMessage = '必須項目です'
+						} else if (!this.check_isHiragana(target.value)) {
+							target.errorMessage = 'ひらがなで入力してください'
+						} else {
+							target.isError = false
+							target.isSuccess = true
+							return
+						}
+						target.isError = true
+					},
+
+					// メールアドレスバリデーション
+					validateEmail() {
+						const target = this.email
+						if (target.value === '') {
+							target.errorMessage = '必須項目です'
+						} else if (!this.check_isEmail(target.value)) {
+							target.errorMessage = '正しいメールアドレスの形式で入力してださい'
+						} else {
+							target.isError = false
+							target.isSuccess = true
+							return
+						}
+						target.isError = true
+					},
+
+					// お問い合わせ項目バリデーション
+					validateContentType() {
+						const target = this.contentType
+						if (target.value === '') {
+							target.errorMessage = '必須項目です'
+						} else {
+							target.isError = false
+							target.isSuccess = true
+							return
+						}
+						target.isError = true
+					},
+
+					// お問い合わせ内容バリデーション
+					validateContent() {
+						const target = this.content
+						if (target.value === '') {
+							target.errorMessage = '必須項目です'
+						} else {
+							target.isError = false
+							target.isSuccess = true
+							return
+						}
+						target.isError = true
+					},
+
+					// プラポリ バリデーション
+					validatePrivacy() {
+						const target = this.privacy
+						if (target.value === false) {
+							target.errorMessage = '同意が必須です'
+						} else {
+							target.isError = false
+							target.isSuccess = true
+							return
+						}
+						target.isError = true
+					},
+
+					//  確認ボタンバリデーション
+					submitValidation(e) {
+						e.preventDefault()
+						this.validateName()
+						this.validateNameFurigana()
+						this.validateEmail()
+						this.validateContentType()
+						this.validateContent()
+						this.validatePrivacy()
+
+						if (this.allValidations) {
+							this.$refs.form.submit()
+						}
+					},
+
+					/*
+					 * Helper
+					 */
+					// ひらがなチェック
+					check_isHiragana(arg) {
+						arg = arg == null ? '' : arg
+						if (arg.match(/^[ぁ-んー　]*$/)) {
+							return true
+						} else {
+							return false
+						}
+					},
+					// メールアドレスチェック
+					check_isEmail(arg) {
+						if (arg.match(/.+@.+\..+/)) {
+							return true
+						} else {
+							return false
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

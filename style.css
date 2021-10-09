@@ -1,0 +1,43 @@
+html, body {
+  /* height: 100% */
+  padding-top: 10px;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3%;
+}
+
+form {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 650px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.field{
+  margin-bottom: 10px !important;
+}
+
+button {
+  width: 100%
+}
+a{
+  color: #3273dc;
+  border-bottom: 1px solid;
+}
+
+.nothing{
+  opacity: 0.6;
+  cursor: default;
+}
+
+
+/* NOTE マスタッシュ構文のちらつきを防ぐCSSです。 */
+[v-cloak] {
+  display: none;
+}
